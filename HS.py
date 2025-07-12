@@ -42,14 +42,14 @@ def init_data():
             "CNI", "Prix_Chambre", "Nb_Jours", "Date_Arrivee", 
             "Montant_Total", "Date_Reservation"
         ])
-        df.to_excel("reservations.xlsx", index=False)
+        df.to_excel("RESERVATIONS.xlsx", index=False)
     else:
-        df = pd.read_excel("reservations.xlsx")
+        df = pd.read_excel("RESERVATIONS.xlsx")
     return df
 
 # Fonction pour sauvegarder les données
 def save_data(df):
-    df.to_excel("reservations.xlsx", index=False)
+    df.to_excel("RESERVATIONS.xlsx", index=False)
 
 # Fonction pour ajouter une réservation
 def add_reservation(data):
@@ -63,7 +63,7 @@ with st.sidebar:
     st.markdown("<h1 style='text-align: center;'>HOTEL LA SANTE</h1>", unsafe_allow_html=True)
     
     # Logo (remplacez par votre propre image)
-    st.image("https://via.placeholder.com/150", caption="Logo Hotel", use_column_width=True)
+    st.image("https://www.facebook.com/photo/?fbid=671851741719088&set=pb.100066828047627.-2207520000", caption="Logo Hotel", use_column_width=True)
     
     st.markdown("---")
     st.markdown("### Fonctions supplémentaires")
@@ -85,8 +85,25 @@ with st.sidebar:
             st.warning("Aucune réservation enregistrée")
 
 # Contenu principal de l'application
-st.markdown("<h1 class='title'>HOTEL LA SANTE</h1>", unsafe_allow_html=True)
-st.markdown("---")
+#st.markdown("<h1 class='title'>HOTEL LA SANTE</h1>", unsafe_allow_html=True)
+#st.markdown("---")
+st.markdown(
+    """
+    <div style="
+        border: 2px solid #0099ff;
+        background-color: #eaf6ff;
+        padding: 20px;
+        border-radius: 8px;
+        text-align: center;
+        ">
+      <h1 style="margin: 0; color: #024a86;">HOTEL LA SANTE</h1>
+      <hr style="border:1px solid #0099ff; width: 80%; margin-top: 10px;">
+    </div>
+    """,
+    unsafe_allow_html=True
+)
+
+
 
 # Formulaire de réservation
 with st.form("reservation_form"):
@@ -101,8 +118,8 @@ with st.form("reservation_form"):
     with col2:
         profession = st.text_input("Profession", max_chars=50)
         cni = st.text_input("Numéro CNI*", max_chars=20)
-        prix_chambre = st.selectbox("Prix de chambre (FCFA)*", [7000, 8000, 10000])
-        nb_jours = st.slider("Nombre de jours*", 1, 30, 1)
+        prix_chambre = st.selectbox("Prix de chambre (FCFA)*", [7000, 8000, 10000,12000])
+        nb_jours = st.slider("Nombre de jours*", 1, 365, 1)
     
     date_arrivee = st.date_input("Date d'arrivée*", min_value=datetime.today())
     
