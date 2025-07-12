@@ -2,7 +2,7 @@ import streamlit as st
 import pandas as pd
 from datetime import datetime
 import os
-
+ 
 # Configuration de la page
 st.set_page_config(page_title="HOTEL LA SANTE", page_icon="🏨", layout="wide") 
 
