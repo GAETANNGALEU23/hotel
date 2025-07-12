@@ -27,7 +27,7 @@ st.markdown(
         display: block;
         margin-left: auto;
         margin-right: auto;
-        width: 80%;
+        width: 90%;
     }
     </style>
     """,
@@ -36,7 +36,7 @@ st.markdown(
 
 # Fonction pour initialiser ou charger le fichier Excel
 def init_data():
-    if not os.path.exists("reservations.xlsx"):
+    if not os.path.exists("RESERVATIONS.xlsx"):
         df = pd.DataFrame(columns=[
             "Nom", "Prenom", "Telephone", "Ville", "Profession", 
             "CNI", "Prix_Chambre", "Nb_Jours", "Date_Arrivee", 
@@ -63,7 +63,7 @@ with st.sidebar:
     st.markdown("<h1 style='text-align: center;'>HOTEL LA SANTE</h1>", unsafe_allow_html=True)
     
     # Logo (remplacez par votre propre image)
-    st.image("https://www.facebook.com/photo/?fbid=671851741719088&set=pb.100066828047627.-2207520000", caption="Logo Hotel", use_column_width=True)
+    st.image("HS1.jpeg", caption="HS1.jpeg", use_column_width=True)
     
     st.markdown("---")
     st.markdown("### Fonctions supplémentaires")
@@ -129,8 +129,8 @@ with st.form("reservation_form"):
     st.markdown(f"**Montant total à payer: {montant_total} FCFA**")
     st.markdown("*Champs obligatoires*")
     
-    submitted = st.form_submit_button("Enregistrer")
-    cancelled = st.form_submit_button("Annuler")
+    submitted = st.form_submit_button("SOUMETTRE")
+    cancelled = st.form_submit_button("ANNULER")
 
 # Traitement des actions du formulaire
 if submitted:
