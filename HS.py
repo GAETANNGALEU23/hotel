@@ -118,7 +118,7 @@ with st.form("reservation_form"):
     with col2:
         profession = st.text_input("Profession", max_chars=50)
         cni = st.text_input("Numéro CNI*", max_chars=20)
-        prix_chambre = st.selectbox("Prix de chambre (FCFA)*", [7000, 8000, 10000,12000])
+        prix_chambre = st.selectbox("Prix de chambre (FCFA)*", [7000, 8000, 10000,12000]) 
         nb_jours = st.slider("Nombre de jours*", 1, 365, 1)
     
     date_arrivee = st.date_input("Date d'arrivée*", min_value=datetime.today())
