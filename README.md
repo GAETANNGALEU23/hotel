@@ -1,2 +1,1 @@
-# hotel
-hotel
+pip install openpyxl
