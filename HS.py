@@ -1,176 +1,142 @@
-{
- "cells": [
-  {
-   "cell_type": "code",
-   "execution_count": null,
-   "id": "6fb98b90-efa8-420f-ad98-9d9976c5695a",
-   "metadata": {},
-   "outputs": [],
-   "source": [
-    "import streamlit as st\n",
-    "import pandas as pd\n",
-    "from datetime import datetime\n",
-    "import os\n",
-    "\n",
-    "# Configuration de la page\n",
-    "st.set_page_config(page_title=\"HOTEL LA SANTE\", page_icon=\"🏨\", layout=\"wide\")\n",
-    "\n",
-    "# Style CSS pour le fond bleu clair et autres éléments\n",
-    "st.markdown(\n",
-    "    \"\"\"\n",
-    "    <style>\n",
-    "    .stApp {\n",
-    "        background-color: #e6f0ff;\n",
-    "    }\n",
-    "    .title {\n",
-    "        color: #003366;\n",
-    "        text-align: center;\n",
-    "        font-size: 36px;\n",
-    "        font-weight: bold;\n",
-    "        padding: 20px;\n",
-    "    }\n",
-    "    .sidebar .sidebar-content {\n",
-    "        background-color: #f0f2f6;\n",
-    "    }\n",
-    "    .logo {\n",
-    "        display: block;\n",
-    "        margin-left: auto;\n",
-    "        margin-right: auto;\n",
-    "        width: 80%;\n",
-    "    }\n",
-    "    </style>\n",
-    "    \"\"\",\n",
-    "    unsafe_allow_html=True\n",
-    ")\n",
-    "\n",
-    "# Fonction pour initialiser ou charger le fichier Excel\n",
-    "def init_data():\n",
-    "    if not os.path.exists(\"reservations.xlsx\"):\n",
-    "        df = pd.DataFrame(columns=[\n",
-    "            \"Nom\", \"Prenom\", \"Telephone\", \"Ville\", \"Profession\", \n",
-    "            \"CNI\", \"Prix_Chambre\", \"Nb_Jours\", \"Date_Arrivee\", \n",
-    "            \"Montant_Total\", \"Date_Reservation\"\n",
-    "        ])\n",
-    "        df.to_excel(\"reservations.xlsx\", index=False)\n",
-    "    else:\n",
-    "        df = pd.read_excel(\"reservations.xlsx\")\n",
-    "    return df\n",
-    "\n",
-    "# Fonction pour sauvegarder les données\n",
-    "def save_data(df):\n",
-    "    df.to_excel(\"reservations.xlsx\", index=False)\n",
-    "\n",
-    "# Fonction pour ajouter une réservation\n",
-    "def add_reservation(data):\n",
-    "    df = init_data()\n",
-    "    new_row = pd.DataFrame([data])\n",
-    "    df = pd.concat([df, new_row], ignore_index=True)\n",
-    "    save_data(df)\n",
-    "\n",
-    "# Sidebar avec logo et fonctions supplémentaires\n",
-    "with st.sidebar:\n",
-    "    st.markdown(\"<h1 style='text-align: center;'>HOTEL LA SANTE</h1>\", unsafe_allow_html=True)\n",
-    "    \n",
-    "    # Logo (remplacez par votre propre image)\n",
-    "    st.image(\"https://via.placeholder.com/150\", caption=\"Logo Hotel\", use_column_width=True)\n",
-    "    \n",
-    "    st.markdown(\"---\")\n",
-    "    st.markdown(\"### Fonctions supplémentaires\")\n",
-    "    \n",
-    "    # Afficher le nombre total de réservations\n",
-    "    if st.button(\"Voir statistiques\"):\n",
-    "        df = init_data()\n",
-    "        total_reservations = len(df)\n",
-    "        total_revenus = df[\"Montant_Total\"].sum() if \"Montant_Total\" in df.columns else 0\n",
-    "        st.info(f\"Réservations totales: {total_reservations}\")\n",
-    "        st.info(f\"Revenus totaux: {total_revenus} FCFA\")\n",
-    "    \n",
-    "    # Afficher les dernières réservations\n",
-    "    if st.button(\"Dernières réservations\"):\n",
-    "        df = init_data()\n",
-    "        if not df.empty:\n",
-    "            st.dataframe(df.tail(5))\n",
-    "        else:\n",
-    "            st.warning(\"Aucune réservation enregistrée\")\n",
-    "\n",
-    "# Contenu principal de l'application\n",
-    "st.markdown(\"<h1 class='title'>HOTEL LA SANTE</h1>\", unsafe_allow_html=True)\n",
-    "st.markdown(\"---\")\n",
-    "\n",
-    "# Formulaire de réservation\n",
-    "with st.form(\"reservation_form\"):\n",
-    "    col1, col2 = st.columns(2)\n",
-    "    \n",
-    "    with col1:\n",
-    "        nom = st.text_input(\"Nom*\", max_chars=50)\n",
-    "        prenom = st.text_input(\"Prénom*\", max_chars=50)\n",
-    "        telephone = st.text_input(\"Téléphone*\", max_chars=15)\n",
-    "        ville = st.text_input(\"Ville de résidence\", max_chars=50)\n",
-    "    \n",
-    "    with col2:\n",
-    "        profession = st.text_input(\"Profession\", max_chars=50)\n",
-    "        cni = st.text_input(\"Numéro CNI*\", max_chars=20)\n",
-    "        prix_chambre = st.selectbox(\"Prix de chambre (FCFA)*\", [7000, 8000, 10000])\n",
-    "        nb_jours = st.slider(\"Nombre de jours*\", 1, 30, 1)\n",
-    "    \n",
-    "    date_arrivee = st.date_input(\"Date d'arrivée*\", min_value=datetime.today())\n",
-    "    \n",
-    "    # Calcul du montant total\n",
-    "    montant_total = prix_chambre * nb_jours\n",
-    "    \n",
-    "    st.markdown(f\"**Montant total à payer: {montant_total} FCFA**\")\n",
-    "    st.markdown(\"*Champs obligatoires*\")\n",
-    "    \n",
-    "    submitted = st.form_submit_button(\"Enregistrer\")\n",
-    "    cancelled = st.form_submit_button(\"Annuler\")\n",
-    "\n",
-    "# Traitement des actions du formulaire\n",
-    "if submitted:\n",
-    "    if not nom or not prenom or not telephone or not cni:\n",
-    "        st.error(\"Veuillez remplir tous les champs obligatoires (*)\")\n",
-    "    else:\n",
-    "        reservation_data = {\n",
-    "            \"Nom\": nom,\n",
-    "            \"Prenom\": prenom,\n",
-    "            \"Telephone\": telephone,\n",
-    "            \"Ville\": ville,\n",
-    "            \"Profession\": profession,\n",
-    "            \"CNI\": cni,\n",
-    "            \"Prix_Chambre\": prix_chambre,\n",
-    "            \"Nb_Jours\": nb_jours,\n",
-    "            \"Date_Arrivee\": date_arrivee.strftime(\"%Y-%m-%d\"),\n",
-    "            \"Montant_Total\": montant_total,\n",
-    "            \"Date_Reservation\": datetime.now().strftime(\"%Y-%m-%d %H:%M:%S\")\n",
-    "        }\n",
-    "        \n",
-    "        add_reservation(reservation_data)\n",
-    "        st.success(\"Réservation enregistrée avec succès!\")\n",
-    "        st.balloons()\n",
-    "\n",
-    "if cancelled:\n",
-    "    st.experimental_rerun()"
-   ]
-  }
- ],
- "metadata": {
-  "kernelspec": {
-   "display_name": "Python 3 (ipykernel)",
-   "language": "python",
-   "name": "python3"
-  },
-  "language_info": {
-   "codemirror_mode": {
-    "name": "ipython",
-    "version": 3
-   },
-   "file_extension": ".py",
-   "mimetype": "text/x-python",
-   "name": "python",
-   "nbconvert_exporter": "python",
-   "pygments_lexer": "ipython3",
-   "version": "3.11.5"
-  }
- },
- "nbformat": 4,
- "nbformat_minor": 5
-}
+import streamlit as st
+import pandas as pd
+from datetime import datetime
+import os
+
+# Configuration de la page
+st.set_page_config(page_title="HOTEL LA SANTE", page_icon="🏨", layout="wide")
+
+# Style CSS pour le fond bleu clair et autres éléments
+st.markdown(
+    """
+    <style>
+    .stApp {
+        background-color: #e6f0ff;
+    }
+    .title {
+        color: #003366;
+        text-align: center;
+        font-size: 36px;
+        font-weight: bold;
+        padding: 20px;
+    }
+    .sidebar .sidebar-content {
+        background-color: #f0f2f6;
+    }
+    .logo {
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+        width: 80%;
+    }
+    </style>
+    """,
+    unsafe_allow_html=True
+)
+
+# Fonction pour initialiser ou charger le fichier Excel
+def init_data():
+    if not os.path.exists("reservations.xlsx"):
+        df = pd.DataFrame(columns=[
+            "Nom", "Prenom", "Telephone", "Ville", "Profession", 
+            "CNI", "Prix_Chambre", "Nb_Jours", "Date_Arrivee", 
+            "Montant_Total", "Date_Reservation"
+        ])
+        df.to_excel("reservations.xlsx", index=False)
+    else:
+        df = pd.read_excel("reservations.xlsx")
+    return df
+
+# Fonction pour sauvegarder les données
+def save_data(df):
+    df.to_excel("reservations.xlsx", index=False)
+
+# Fonction pour ajouter une réservation
+def add_reservation(data):
+    df = init_data()
+    new_row = pd.DataFrame([data])
+    df = pd.concat([df, new_row], ignore_index=True)
+    save_data(df)
+
+# Sidebar avec logo et fonctions supplémentaires
+with st.sidebar:
+    st.markdown("<h1 style='text-align: center;'>HOTEL LA SANTE</h1>", unsafe_allow_html=True)
+    
+    # Logo (remplacez par votre propre image)
+    st.image("https://via.placeholder.com/150", caption="Logo Hotel", use_column_width=True)
+    
+    st.markdown("---")
+    st.markdown("### Fonctions supplémentaires")
+    
+    # Afficher le nombre total de réservations
+    if st.button("Voir statistiques"):
+        df = init_data()
+        total_reservations = len(df)
+        total_revenus = df["Montant_Total"].sum() if "Montant_Total" in df.columns else 0
+        st.info(f"Réservations totales: {total_reservations}")
+        st.info(f"Revenus totaux: {total_revenus} FCFA")
+    
+    # Afficher les dernières réservations
+    if st.button("Dernières réservations"):
+        df = init_data()
+        if not df.empty:
+            st.dataframe(df.tail(5))
+        else:
+            st.warning("Aucune réservation enregistrée")
+
+# Contenu principal de l'application
+st.markdown("<h1 class='title'>HOTEL LA SANTE</h1>", unsafe_allow_html=True)
+st.markdown("---")
+
+# Formulaire de réservation
+with st.form("reservation_form"):
+    col1, col2 = st.columns(2)
+    
+    with col1:
+        nom = st.text_input("Nom*", max_chars=50)
+        prenom = st.text_input("Prénom*", max_chars=50)
+        telephone = st.text_input("Téléphone*", max_chars=15)
+        ville = st.text_input("Ville de résidence", max_chars=50)
+    
+    with col2:
+        profession = st.text_input("Profession", max_chars=50)
+        cni = st.text_input("Numéro CNI*", max_chars=20)
+        prix_chambre = st.selectbox("Prix de chambre (FCFA)*", [7000, 8000, 10000])
+        nb_jours = st.slider("Nombre de jours*", 1, 30, 1)
+    
+    date_arrivee = st.date_input("Date d'arrivée*", min_value=datetime.today())
+    
+    # Calcul du montant total
+    montant_total = prix_chambre * nb_jours
+    
+    st.markdown(f"**Montant total à payer: {montant_total} FCFA**")
+    st.markdown("*Champs obligatoires*")
+    
+    submitted = st.form_submit_button("Enregistrer")
+    cancelled = st.form_submit_button("Annuler")
+
+# Traitement des actions du formulaire
+if submitted:
+    if not nom or not prenom or not telephone or not cni:
+        st.error("Veuillez remplir tous les champs obligatoires (*)")
+    else:
+        reservation_data = {
+            "Nom": nom,
+            "Prenom": prenom,
+            "Telephone": telephone,
+            "Ville": ville,
+            "Profession": profession,
+            "CNI": cni,
+            "Prix_Chambre": prix_chambre,
+            "Nb_Jours": nb_jours,
+            "Date_Arrivee": date_arrivee.strftime("%Y-%m-%d"),
+            "Montant_Total": montant_total,
+            "Date_Reservation": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        }
+        
+        add_reservation(reservation_data)
+        st.success("Réservation enregistrée avec succès!")
+        st.balloons()
+
+if cancelled:
+    st.experimental_rerun()
