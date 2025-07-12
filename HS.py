@@ -63,7 +63,7 @@ with st.sidebar:
     st.markdown("<h1 style='text-align: center;'>HOTEL LA SANTE</h1>", unsafe_allow_html=True)
     
     # Logo (remplacez par votre propre image)
-    st.image("Votre Désir, notre Préocupation", caption="HS1.jpeg", use_column_width=True)
+    st.image("HS1.jpeg", caption="P", use_column_width=True)
     
     st.markdown("---")
     st.markdown("### Fonctions supplémentaires")
