@@ -85,7 +85,7 @@ with st.sidebar:
             st.warning("Aucune réservation enregistrée")
 
 # Contenu principal de l'application
-#st.markdown("<h1 class='title'>HOTEL LA SANTE</h1>", unsafe_allow_html=True)
+#st.markdown("<h1 class='title'>RESERVATION CHAMBRES HOTEL LA SANTE</h1>", unsafe_allow_html=True)
 #st.markdown("---")
 st.markdown(
     """
