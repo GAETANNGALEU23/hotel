@@ -96,7 +96,7 @@ st.markdown(
         border-radius: 8px;
         text-align: center;
         ">
-      <h1 style="margin: 0; color: #024a86;">HOTEL LA SANTE</h1>
+      <h1 style="margin: 0; color: #024a86;">RESERVATION CHAMBRES HOTEL LA SANTE</h1>
       <hr style="border:1px solid #0099ff; width: 80%; margin-top: 10px;">
     </div>
     """,
